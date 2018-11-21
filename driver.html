@@ -1,0 +1,127 @@
+<!--Kevin Velasquez, ksvelasq@ucsc.edu-->
+<html lang="en">
+  <head>
+      <meta charset="utf-8"/>
+      <title> "Kevin Velasquez"'s Assignment 4 </title>
+      <!-- Include external libraries -->
+      <script src = "lib/webgl-utils.js"></script>
+      <script src = "lib/webgl-debug.js"></script>
+      <script src = "lib/cuon-utils.js"></script>
+      <script src = "lib/cuon-matrix.js"></script>
+      <script src = "lib/load-file.js"></script>
+      <script src = "lib/updated-cuon-utils.js"></script>
+
+      <!-- Include main program -->
+      <script src = "prog/main.js"></script>
+
+      <!-- Include tick function -->
+      <script src = "prog/tick.js"></script>
+
+      <!-- Include internal functions -->
+      <script src = "prog/eventFunctions.js"></script>
+      <script src = "prog/glslFunctions.js"></script>
+      <script src = "prog/htmlFunctions.js"></script>
+
+      <!-- Include scene objects -->
+      <script src = "prog/scene/scene.js"></script>
+      <script src = "prog/scene/vertex.js"></script>
+      <script src = "prog/scene/geometry.js"></script>
+
+      <!-- Include geometric objects -->
+      <script src = "prog/geometries/circle.js"></script>
+      <script src = "prog/geometries/square.js"></script>
+      <script src = "prog/geometries/triangle.js"></script>
+
+      <!-- Include animated geometric objects -->
+      <script src = "prog/geometries/animated/randomCircle.js"></script>
+      <script src = "prog/geometries/animated/spinningSquare.js"></script>
+      <script src = "prog/geometries/animated/fluctuatingTriangle.js"></script>
+      <script src = "prog/geometries/animated/tiltedCube.js"></script>
+      <script src = "prog/geometries/animated/diamond.js"></script>
+      <script src = "prog/geometries/animated/pyramid.js"></script>
+      <script src = "prog/geometries/animated/closingGate.js"></script>
+
+      <!-- OBJ Loading -->
+      <script src = "lib/obj_loading/webgl-obj-loader.js"></script>
+      <script src = "lib/obj_loading/loadedOBJ.js"></script>
+
+      <!-- Include shaders -->
+      <script src = "prog/shaders.js"></script>
+  </head>
+  <style>
+    .btn-group button {
+        background-color: black; /* Green background */
+        border: 1px solid white; /* Green border */
+        color: white; /* White text */
+        padding: 5px 5px; /* Some padding */
+        position: relative;
+        cursor: pointer; /* Pointer/hand icon *//* Float the buttons side by side */ 
+        right: 0;
+    }
+    
+    /* Clear floats (clearfix hack) */
+    .btn-group:after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+    
+    .btn-group button:not(:last-child) {
+        border-right: none; /* Prevent double borders */
+    }
+    
+    /* Add a background color on hover */
+    .btn-group button:hover {
+        background-color: blue;
+    }
+
+    .thumb {
+        height: 75px;
+        border: 1px solid #000;
+        margin: 10px 5px 0 0;
+    }
+  </style>
+
+  <body onresize="resize()" onload = "main()" style="overflow:hidden;" style="margin-bottom: 20px; padding-bottom: 20px;">
+    <!--Canvas Element-->
+    <div style="margin-bottom: -14px; margin-top: -23px;">
+      <div style="display: inline-block;"><p> CS 160 - ASG 5, ksvelasq@ucsc.edu</p></div>
+      <button type="button" style="display: inline-block; float: right; margin-top: 15px;" onclick="addObj()">Add OBJ To Scene</button>
+    </div>
+    <canvas id="webgl"></canvas>
+    <!--<div>
+      <div style="display: inline-block;"><p>Choose TEX: </p></div>
+      <div style="display: inline-block;"><input type="file" id="texInput"/></div>
+    </div>-->
+    <div style="margin-bottom: 10px;">
+        <div style="display: inline-block;"><button type="button" onclick="perspective()">Perspective</button></div>
+        <div style="display: inline-block;"><button type="button" onclick="orthographic()">Orthographic</button></div>
+        <div style="display: inline-block; font-size: 14px; margin-left: 20px;"><p id="xcoords">X: ......</p></div>
+        <div style="display: inline-block; font-size: 14px;"><p id="ycoords">Y: ......</p></div>
+        <img src="./external/textures/yourPosition2.PNG" style="float: right; display: none" id="posimg" height="250" width="250">
+    </div>
+    <div>
+      <div style="display: inline-block;"><button type="button" onclick="firstPerson()">First Person</button></div>
+      <div style="display: inline-block;"><button type="button" onclick="topDown()">Top Down</button></div>
+    </div>
+    <div>
+        <div style="display: inline-block; margin-bottom: -15px;"><p>ZOOM:</p></div>
+        <div style="display: inline-block; margin-bottom: -15px;"><p><span id="value"></span></p></div>
+        <div><input type="range" min="30" max="90" value="60" class="slider" id="range"></div>
+    </div>
+    <div style=" margin-bottom: -15px;">
+      <div style="display: inline-block;"><p>NEAR:</p></div>
+      <div style="display: inline-block;"><p><span id="nearvalue"></span></p></div>
+      <div style="display: inline-block; margin-left: 90px;"><p>FAR:</p></div>
+      <div style="display: inline-block;"><p><span id="farvalue"></span></p></div>
+    </div>
+    <div>
+      <div style="display: inline-block;"><input type="range" min="1" max="10" value="1" class="slider" id="nearrange"></div>
+      <div style="display: inline-block; margin-left: 7px;"><input type="range" min="1" max="100" value="100" class="slider" id="farrange"></div>
+    </div>
+    <div style="margin-top: 25px;">
+      <div style="display: inline-block;"><p>Choose OBJ and TEX: </p></div>
+      <div style="display: inline-block;"><input type="file" oninput="addFiles()" id="objInput" multiple></div>
+    </div>
+  </body>
+</html>
