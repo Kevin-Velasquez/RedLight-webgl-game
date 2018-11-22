@@ -11,6 +11,7 @@ class TiltedCube extends Geometry {
   constructor(size, centerX, centerY) {
     super();
     this.generateCubeVertices(size, centerX, centerY);
+    this.generateCubeNormals();
     this.vertices.push(cubeVertices);
     this.x.push(centerX);
     this.y.push(centerY);
@@ -42,6 +43,12 @@ class TiltedCube extends Geometry {
       centerX-size, centerY-size,  size,       centerX-size, centerY-size, -size,    centerX+size, centerY-size, -size,       //t10
       centerX-size, centerY-size,  size,       centerX+size, centerY-size, -size,    centerX+size, centerY-size,  size        //t11
     ]);
+
+    generateCubeNormals() {
+      cubeNormals = new Float32Array([
+        
+      ])
+    }
 
     // Recommendations: Might want to generate your cube vertices so that their
     // x-y-z values are combinations of 1.0 and -1.0. Allows you to scale the

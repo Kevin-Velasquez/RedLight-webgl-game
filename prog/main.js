@@ -41,7 +41,7 @@ var leftRotation, persp = true, firstPersonView = true;
 var currentX = 0, currentY = -2.2;
 var g_EyeX = 0, g_EyeY = -2.2, g_EyeZ = 0;
 var movedX = 0, movedY = 0;
-var img, scale;
+var img, scale, cubeNormals;
 
 /**
  * Function called when the webpage loads.
