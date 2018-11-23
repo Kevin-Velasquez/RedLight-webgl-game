@@ -88,10 +88,13 @@ function create2DTexture(imagePath, magParam, minParam, wrapSParam, wrapTParam, 
 /**
  * Sends data to an attribute variable using a buffer.
  */
-function sendAttributeBufferToGLSL(data, dataCount, attribName) {
+function sendAttributeBufferToGLSL(vertexData, normalData, dataCount, attribName) {
   vertexBuffer = gl.createBuffer();
+  normalBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+  gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, vertexData, gl.STATIC_DRAW);
+  //gl.bufferData(gl.ARRAY_BUFFER, normalData, gl.STATIC_DRAW);
   gl.vertexAttribPointer(attribName, dataCount, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(attribName);
 }

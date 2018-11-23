@@ -5,7 +5,7 @@
 
 var gl, ev;
 var slider, nearslider, farslider, output, nearoutput, faroutput, interSlider;
-var a_Position, u_FragColor, a_PointSize, u_ModelMatrix, u_ViewMatrix, u_ProjMatrix;
+var a_Position, u_FragColor, a_PointSize, u_ModelMatrix, u_ViewMatrix, u_ProjMatrix, a_Normal;
 var mouseDown = 0, mouseUp = true, x, y, xy, size, rgb, vertexBuffer, rgba;
 var triangleVertices, squareVertices, numberOfSegments, circleVertices;
 var squareButton = true, triangleButton = false, circleButton = false; 
@@ -42,6 +42,7 @@ var currentX = 0, currentY = -2.2;
 var g_EyeX = 0, g_EyeY = -2.2, g_EyeZ = 0;
 var movedX = 0, movedY = 0;
 var img, scale, cubeNormals;
+var normalBuffer;
 
 /**
  * Function called when the webpage loads.
@@ -65,19 +66,18 @@ function main() {
 
   //Gets the location of the fragments and shader variables.
   a_Position = gl.getAttribLocation(gl.program, 'a_Position');
-  a_PointSize = gl.getUniformLocation(gl.program, 'a_PointSize');
+  a_Normal = gl.getAttribLocation(gl.program, 'a_Normal')
 
+  a_PointSize = gl.getUniformLocation(gl.program, 'a_PointSize');
   u_ModelMatrix = gl.getUniformLocation(gl.program, 'u_ModelMatrix');
   u_ViewMatrix = gl.getUniformLocation(gl.program, 'u_ViewMatrix');
   u_ProjMatrix = gl.getUniformLocation(gl.program, 'u_ProjMatrix');
 
   a_Color = gl.getAttribLocation(gl.program, 'a_Color');
-  u_Switch = gl.getUniformLocation(gl.program, 'u_Switch');
+  //u_Switch = gl.getUniformLocation(gl.program, 'u_Switch');
   u_FSwitch = gl.getUniformLocation(gl.program, 'u_FSwitch');
-  u_VSwitch = gl.getUniformLocation(gl.program, 'u_VSwitch');
-  a_TexCoord = gl.getAttribLocation(gl.program, 'a_TexCoord');
-  
-  
+  //u_VSwitch = gl.getUniformLocation(gl.program, 'u_VSwitch');
+  //a_TexCoord = gl.getAttribLocation(gl.program, 'a_TexCoord');
 
   //Start with rainbow colors
   //gl.uniform1f(u_FSwitch, 0.5); 

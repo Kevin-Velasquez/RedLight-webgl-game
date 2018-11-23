@@ -12,6 +12,7 @@ class Geometry {
    */
   constructor() {
     this.vertices = []; // Vertex objects. Each vertex has x-y-z.
+    this.normals = [];
     this.modelMatrix = new Matrix4(); // Model matrix applied to geometric object
     this.x = [];
     this.y = [];
@@ -24,7 +25,7 @@ class Geometry {
    */
   render(numberOfVertices, renderMethod, space) {
     sendUniformMatToGLSL(this.modelMatrix.elements, u_ModelMatrix);  
-    sendAttributeBufferToGLSL(this.vertices[0], space, a_Position);
+    sendAttributeBufferToGLSL(this.vertices[0], this.normals[0], space, a_Position);
     tellGLSLToDrawCurrentBuffer(renderMethod, numberOfVertices);
   }
   updateAnimation() {
