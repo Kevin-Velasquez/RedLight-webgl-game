@@ -25,7 +25,17 @@ class Geometry {
    */
   render(numberOfVertices, renderMethod, space) {
     sendUniformMatToGLSL(this.modelMatrix.elements, u_ModelMatrix);  
-    sendAttributeBufferToGLSL(this.vertices[0], this.normals[0], space, a_Position);
+    var vertexBuffer = gl.createBuffer();
+    sendAttributeBufferToGLSL(this.vertices[0], space, a_Position, vertexBuffer);
+    var normalBuffer = gl.createBuffer();
+    sendAttributeBufferToGLSL(this.normals[0], space, a_Normal, normalBuffer);
+    if(nPressed) {
+      var vertexColorBuffer = gl.createBuffer();
+      sendAttributeBufferToGLSL(this.normals[0], space, a_Color, vertexColorBuffer);
+    } else {
+      var vertexColorBuffer = gl.createBuffer();
+      sendAttributeBufferToGLSL(verticesColors, space, a_Color, vertexColorBuffer);
+    }
     tellGLSLToDrawCurrentBuffer(renderMethod, numberOfVertices);
   }
   updateAnimation() {

@@ -247,7 +247,13 @@ function keyPress(ev) {
         sendTextToHTML(this.value, output);
       }
     }
-  } else { return; } // Prevent the unnecessary drawing  
+  } else
+  if(ev.keyCode == 78) {
+    nPressed = (!nPressed);
+    //if(nPressed) gl.uniform1f(u_FSwitch, 1.0);
+    //else gl.uniform1f(u_FSwitch, 0.0);
+  } 
+  else { return; } // Prevent the unnecessary drawing  
 }
 
 function orthographic() {

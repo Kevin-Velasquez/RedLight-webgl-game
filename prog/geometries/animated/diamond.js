@@ -15,7 +15,9 @@ class Diamond extends Geometry {
   constructor(size, centerX, centerY) {
     super();
     this.generateDiamondVertices(size, centerX, centerY);
+    this.generateDiamondNormals();
     this.vertices.push(diamondVertices);
+    this.normals.push(diamondNormals);
     this.x.push(centerX);
     this.y.push(centerY);
 
@@ -29,18 +31,33 @@ class Diamond extends Geometry {
    */
   generateDiamondVertices(size, centerX, centerY) {
     diamondVertices = new Float32Array([
-      centerX, centerY, -size,    centerX, centerY-size, 0,    centerX-size, centerY, 0,
-      centerX, centerY, -size,    centerX-size, centerY, 0,    centerX, centerY+size, 0,
-      centerX, centerY, -size,    centerX, centerY+size, 0,    centerX+size, centerY, 0,
-      centerX, centerY, -size,    centerX+size, centerY, 0,    centerX, centerY-size, 0,
-
-      centerX, centerY, size,    centerX, centerY-size, 0,    centerX-size, centerY, 0,
-      centerX, centerY, size,    centerX-size, centerY, 0,    centerX, centerY+size, 0,
-      centerX, centerY, size,    centerX, centerY+size, 0,    centerX+size, centerY, 0,
-      centerX, centerY, size,    centerX+size, centerY, 0,    centerX, centerY-size, 0
+      //bottom side
+      centerX, centerY, -size,    centerX, centerY-size, 0,    centerX-size, centerY, 0, //t0 -X -Y Q3
+      centerX, centerY, -size,    centerX-size, centerY, 0,    centerX, centerY+size, 0, //t1 -X +Y Q2
+      centerX, centerY, -size,    centerX, centerY+size, 0,    centerX+size, centerY, 0, //t2 +X +Y Q1
+      centerX, centerY, -size,    centerX+size, centerY, 0,    centerX, centerY-size, 0, //t3 +X -Y Q4
+      //top side
+      centerX, centerY, size,    centerX, centerY-size, 0,    centerX-size, centerY, 0,  //t4 -X -Y Q3
+      centerX, centerY, size,    centerX-size, centerY, 0,    centerX, centerY+size, 0,  //t5 -X +Y Q2
+      centerX, centerY, size,    centerX, centerY+size, 0,    centerX+size, centerY, 0,  //t6 +X +Y Q1
+      centerX, centerY, size,    centerX+size, centerY, 0,    centerX, centerY-size, 0   //t7 +X -Y Q4
     ]);
-    // Recomendations: Remember uv coordinates are defined from 0.0 to 1.0.
   }
+
+  generateDiamondNormals() {
+    diamondNormals = new Float32Array([
+      -1.0, -1.0, -1.0,    -1.0, -1.0, -1.0,     -1.0, -1.0, -1.0,   
+      -1.0,  1.0, -1.0,    -1.0,  1.0, -1.0,     -1.0,  1.0, -1.0,  
+       1.0,  1.0, -1.0,     1.0,  1.0, -1.0,      1.0,  1.0, -1.0,  
+       1.0, -1.0, -1.0,     1.0, -1.0, -1.0,      1.0, -1.0, -1.0,
+
+      -1.0, -1.0, 1.0,    -1.0, -1.0, 1.0,     -1.0, -1.0, 1.0,  
+      -1.0,  1.0, 1.0,    -1.0,  1.0, 1.0,     -1.0,  1.0, 1.0,  
+       1.0,  1.0, 1.0,     1.0,  1.0, 1.0,      1.0,  1.0, 1.0,  
+       1.0, -1.0, 1.0,     1.0, -1.0, 1.0,      1.0, -1.0, 1.0
+    ]);
+  }
+
   updateAnimation() {
     var translateToOrigin = new Matrix4 ();
     var rotateInPlace = new Matrix4 ();

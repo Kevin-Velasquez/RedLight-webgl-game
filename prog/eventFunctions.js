@@ -79,13 +79,13 @@ function initEventHandelers() {
   };
   if(once) {
     terrain = true
-    myRandomCircle = new RandomCircle(0.075, 40, g_EyeX, g_EyeY);
+    //myRandomCircle = new RandomCircle(0.075, 40, g_EyeX, g_EyeY);
     myTiltedCube = new TiltedCube(1.0, 0, 0);
     rotateObject(myTiltedCube, 270, 1, 0, 0);
     translateObject(myTiltedCube, 0, 0, -1.1);
     scaleObject(myTiltedCube, 1, 2.25, 1);
     myScene.addGeometry(myTiltedCube);
-    myScene.addGeometry(myRandomCircle);
+    //myScene.addGeometry(myRandomCircle);
     terrain = false;
     createGates();
   }

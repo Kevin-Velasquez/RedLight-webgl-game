@@ -26,15 +26,9 @@ class RandomCircle extends Circle {
   updateAnimation() {
     var translateToCameraPosition = new Matrix4 ();
 
-    //translateToCameraPosition.translate(g_EyeX, g_EyeY, 0);
     translateToCameraPosition.translate(movedX, movedY, 0);
 
     this.modelMatrix = translateToCameraPosition.multiply(this.modelMatrix);
-    /*var randX = Math.floor(Math.random() * 100);
-    var randY = Math.floor(Math.random() * 100);
-    currentAngle = this.animateRandomly();
-    this.modelMatrix.setRotate(currentAngle, 0, 0, 1);
-    this.modelMatrix.translate(randX/100, randY/100, 1);*/
   }
   animateRandomly() {
     return Math.floor(Math.random() * 360);
