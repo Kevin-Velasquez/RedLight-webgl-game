@@ -11,7 +11,9 @@ class Circle extends Geometry {
   constructor(radius, segments, centerX, centerY) {
     super();
     this.generateCircleVertices(radius, segments, centerX, centerY);
+    this.generateCircleNormals();
     this.vertices.push(circleVertices);
+    this.normals.push(circleNormals);
     this.x.push(centerX);
     this.y.push(centerY);
   }
@@ -29,6 +31,15 @@ class Circle extends Geometry {
       vertexData[index+1] = centerY + Math.sin(angle) * radius;
     }
     circleVertices = new Float32Array(vertexData);
+  }
+  generateCircleNormals() {
+    var normalData = [];
+    for(var i = 0; i < vertexData.length/2; i++) {
+      normalData.push(0.0);
+      normalData.push(0.0);
+      normalData.push(1.0);
+    }
+    circleNormals = new Float32Array(normalData);
   }
   render() {
     super.render(vertexData.length/2, gl.TRIANGLE_FAN, 2);

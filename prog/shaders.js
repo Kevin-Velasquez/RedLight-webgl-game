@@ -12,11 +12,17 @@ var VSHADER_SOURCE =
   'uniform mat4 u_ViewMatrix;\n' +
   'uniform mat4 u_ProjMatrix;\n' +
 
+  'uniform bool u_Clicked;\n' + // Mouse is pressed
   'void main() {\n' +
   '  gl_Position = u_ProjMatrix * u_ViewMatrix * u_ModelMatrix * a_Position;\n' +
   '  v_Position = vec3(u_ModelMatrix*a_Position);\n' +
   '  v_Normal = normalize(vec3(u_ModelMatrix*a_Normal).xyz);\n' +
-  '  v_Color = a_Color;\n' +
+
+  '  if (u_Clicked) {\n' + //  Draw in red if mouse is pressed
+  '    v_Color = vec4(1.0, 0.0, 0.0, 1.0);\n' +
+  '  } else {\n' +
+  '    v_Color = a_Color;\n' +
+  '  }\n' +
   '}\n';
 
   var FSHADER_SOURCE = 

@@ -35,35 +35,6 @@ function initEventHandelers() {
   canvas.onmouseup = function(ev) { 
     mouseDown--;
     mouseUp = true; 
-    if(xStart == x) { return; }
-    if(xStart < x) { // left look      
-      leftRotation = true;
-      if(Math.sign(xStart) == -1 && Math.sign(x) == -1) {
-        xDelta = (Math.abs(xStart) - Math.abs(x))/2; 
-      } else if ( Math.sign(xStart) == 1 && Math.sign(x) == 1) {
-        xDelta = (x - xStart)/2;
-      } else {
-        xDelta = (Math.abs(xStart) + x)/2;
-      }
-    } else if (xStart > x) { //right look
-      leftRotation = false;
-      if(Math.sign(xStart) == -1 && Math.sign(x) == -1) {
-        xDelta = (Math.abs(x) - Math.abs(xStart))/2;
-      } else if ( Math.sign(xStart) == 1 && Math.sign(x) == 1) {
-        xDelta = (xStart - x)/2;
-      } else {
-        xDelta = (Math.abs(x) + xStart)/2;
-      }
-    } 
-    if(leftRotation) {
-      angleRotation += xDelta * 70;
-    } else {
-      angleRotation -= xDelta * 70;
-    }
-    angleRotation = angleRotation % 360;
-    angleRotationRads = toRadians(angleRotation);
-    G_atX = 100 * Math.cos(angleRotationRads);
-    G_atY = 100 * Math.sin(angleRotationRads);
   };
   canvas.onmousemove = function(ev) {
     if(mouseUp == false) {mouseDown++}; 
@@ -77,15 +48,16 @@ function initEventHandelers() {
     click(ev, gl, canvas, a_Position, u_FragColor, a_PointSize, u_ModelMatrix);
     xStart = x;
   };
+
   if(once) {
     terrain = true
-    //myRandomCircle = new RandomCircle(0.075, 40, g_EyeX, g_EyeY);
+    myRandomCircle = new RandomCircle(0.075, 40, g_EyeX, g_EyeY);
     myTiltedCube = new TiltedCube(1.0, 0, 0);
     rotateObject(myTiltedCube, 270, 1, 0, 0);
     translateObject(myTiltedCube, 0, 0, -1.1);
     scaleObject(myTiltedCube, 1, 2.25, 1);
     myScene.addGeometry(myTiltedCube);
-    //myScene.addGeometry(myRandomCircle);
+    myScene.addGeometry(myRandomCircle);
     terrain = false;
     createGates();
   }
@@ -127,6 +99,8 @@ function click(ev, gl, canvas, a_Position, u_FragColor, a_PointSize) {
   initEventHandelers();
    
   clickPostion(ev, gl, canvas);  //eventFunction.js
+
+  var picked = check();
 
   gl.clear(gl.COLOR_BUFFER_BIT);
 
@@ -176,4 +150,11 @@ function createGates() {
   scaleObject(myClosingGate, 1, 0.5, 1);
   translateObject(myClosingGate, 0, -0.7, 0.1);
   myScene.addGeometry(myClosingGate);
+}
+
+function check() {
+  var picked = false;
+  //gl.uniform1i(u_Clicked, 1);  // Pass true to u_Clicked}
+
+
 }

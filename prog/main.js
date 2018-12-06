@@ -42,9 +42,10 @@ var currentX = 0, currentY = -2.2;
 var g_EyeX = 0, g_EyeY = -2.2, g_EyeZ = 0;
 var u_EyeX, u_EyeY, u_EyeZ;
 var movedX = 0, movedY = 0;
-var img, scale, cubeNormals, gateNormals, pyramidNormals, diamondNormals;
+var img, scale, cubeNormals, gateNormals, pyramidNormals, diamondNormals, circleNormals;
 var u_Light, lightCounter = 0, lightStep = 1;
 var nPressed = false;
+var u_Clicked, objectClicked = false;
 
 /**
  * Function called when the webpage loads.
@@ -79,8 +80,10 @@ function main() {
   u_Light = gl.getUniformLocation(gl.program, 'u_Light');
 
   u_FSwitch = gl.getUniformLocation(gl.program, 'u_FSwitch');
+  u_Clicked = gl.getUniformLocation(gl.program, 'u_Clicked');
 
   gl.uniform1f(u_FSwitch, 1.0);
+  gl.uniform1i(u_Clicked, 0); // Pass false to u_Clicked
 
   /*vertexColorBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, vertexColorBuffer);

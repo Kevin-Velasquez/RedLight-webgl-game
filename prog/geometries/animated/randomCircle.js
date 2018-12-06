@@ -30,7 +30,4 @@ class RandomCircle extends Circle {
 
     this.modelMatrix = translateToCameraPosition.multiply(this.modelMatrix);
   }
-  animateRandomly() {
-    return Math.floor(Math.random() * 360);
-  }
 }

@@ -61,7 +61,6 @@ function resize() {
 
 //allows strafing perpendicular to any look vector
 function keyPress(ev) {
-  //console.log(angleRotation);
   var absX = Math.abs(G_atX);
   var absY = Math.abs(G_atY);
   var rightAngle = (angleRotation - 90);
@@ -121,15 +120,12 @@ function keyPress(ev) {
         g_EyeX -= 0.03;
       } 
     } else if (leftAngle < 270 && leftAngle >= 180) {
-      //console.log("third")
       if(leftAngle < 270 && leftAngle >= 225) {
         g_EyeY -= 0.03;
         g_EyeX -= 0.03 * (absY/absX);
-        //console.log("270-225: " + absY/absX);
       } else {
         g_EyeY -= 0.03 * (absX/absY);
         g_EyeX -= 0.03;
-        //console.log("225-180: " + absX/absY);
       } 
     } else {
       if(leftAngle < 315 && leftAngle >= 270) {
@@ -211,20 +207,25 @@ function keyPress(ev) {
       } 
     }
   } else 
-  if(ev.keyCode == 74) {
+
+  if(ev.keyCode == 74) {  //Turn left
     angleRotation += 2;
     angleRotation = angleRotation % 360;
     angleRotationRads = toRadians(angleRotation);
     G_atX = 100 * Math.cos(angleRotationRads);
     G_atY = 100 * Math.sin(angleRotationRads);
   } else 
-  if(ev.keyCode == 76) {
+  if(ev.keyCode == 76) {  //Turn right
     angleRotation -= 2;
     angleRotation = angleRotation % 360;
+    if(Math.sign(angleRotation) == -1) {
+      angleRotation = 360 + angleRotation
+    }
     angleRotationRads = toRadians(angleRotation);
     G_atX = 100 * Math.cos(angleRotationRads);
     G_atY = 100 * Math.sin(angleRotationRads);
   } else 
+
   if(ev.keyCode == 73) { //I : zoom in
     if(slider.value > 30) {
       slider.value -= 2;
@@ -250,8 +251,6 @@ function keyPress(ev) {
   } else
   if(ev.keyCode == 78) {
     nPressed = (!nPressed);
-    //if(nPressed) gl.uniform1f(u_FSwitch, 1.0);
-    //else gl.uniform1f(u_FSwitch, 0.0);
   } 
   else { return; } // Prevent the unnecessary drawing  
 }
