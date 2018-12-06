@@ -12,8 +12,9 @@ class Diamond extends Geometry {
    * @constructor
    * @returns {diamond}
    */
-  constructor(size, centerX, centerY) {
+  constructor(size, centerX, centerY, index) {
     super();
+    this.objectIndex = index;
     this.generateDiamondVertices(size, centerX, centerY);
     this.generateDiamondNormals();
     this.vertices.push(diamondVertices);
@@ -78,5 +79,15 @@ class Diamond extends Geometry {
     gl.enable(gl.DEPTH_TEST);
     super.render(24, gl.TRIANGLES, 3);
     gl.disable(gl.DEPTH_TEST);
+  }
+  renderRed() {
+    sendUniformMatToGLSL(this.modelMatrix.elements, u_ModelMatrix);  
+    var vertexBuffer = gl.createBuffer();
+    sendAttributeBufferToGLSL(this.vertices[0], 3, a_Position, vertexBuffer);
+    var normalBuffer = gl.createBuffer();
+    sendAttributeBufferToGLSL(this.normals[0], 3, a_Normal, normalBuffer);
+    var vertexColorBuffer = gl.createBuffer();
+    sendAttributeBufferToGLSL(this.clickedColor, 3, a_Color, vertexColorBuffer);
+    tellGLSLToDrawCurrentBuffer(gl.TRIANGLES, 24);
   }
 }

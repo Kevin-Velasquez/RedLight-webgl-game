@@ -42,8 +42,7 @@ function tick() {
 }
 
 function deltaPos() {
-    movedX = g_EyeX - currentX;
-    movedY = g_EyeY - currentY;
+  movedX = g_EyeX - currentX;
+  movedY = g_EyeY - currentY;
 }
-
 

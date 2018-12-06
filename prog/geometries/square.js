@@ -28,4 +28,5 @@ class Square extends Geometry {
   render() {
     super.render(4, gl.TRIANGLE_STRIP, 2);
   }
+
 }

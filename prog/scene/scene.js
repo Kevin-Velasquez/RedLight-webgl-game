@@ -54,4 +54,11 @@ class Scene {
       this.geometries[k].render();
     }
   }
+
+  renderGeometryRed() {
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    for(var k = 0; k < this.geometries.length; k++) {
+      this.geometries[k].renderRed();
+    }
+  }
 }

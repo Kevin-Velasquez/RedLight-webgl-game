@@ -8,8 +8,9 @@ class ClosingGate extends Geometry {
   /**
    * Constructor for ClosingGate.
    */
-  constructor(size, centerX, centerY, top) {
+  constructor(size, centerX, centerY, top, index) {
     super();
+    this.objectIndex = index;
     this.generateGateVertices(size, centerX, centerY);
     this.generateGateNormals();
     this.vertices.push(gateVertices);
@@ -103,5 +104,15 @@ class ClosingGate extends Geometry {
     gl.enable(gl.DEPTH_TEST);
     super.render(36, gl.TRIANGLES, 3);
     gl.disable(gl.DEPTH_TEST);
+  }
+  renderRed() {
+    sendUniformMatToGLSL(this.modelMatrix.elements, u_ModelMatrix);  
+    var vertexBuffer = gl.createBuffer();
+    sendAttributeBufferToGLSL(this.vertices[0], 3, a_Position, vertexBuffer);
+    var normalBuffer = gl.createBuffer();
+    sendAttributeBufferToGLSL(this.normals[0], 3, a_Normal, normalBuffer);
+    var vertexColorBuffer = gl.createBuffer();
+    sendAttributeBufferToGLSL(this.clickedColor, 3, a_Color, vertexColorBuffer);
+    tellGLSLToDrawCurrentBuffer(gl.TRIANGLES, 36);
   }
 }

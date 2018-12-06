@@ -10,8 +10,9 @@ class Pyramid extends Geometry {
    * @constructor
    * @returns {pyramid}
    */
-  constructor(size, centerX, centerY) {
+  constructor(size, centerX, centerY, index) {
     super();
+    this.objectIndex = index;
     this.generatePyramidVertices(size, centerX, centerY);
     this.generatePyramidNormals();
     this.vertices.push(pyramidVertices);
@@ -80,5 +81,15 @@ class Pyramid extends Geometry {
     gl.enable(gl.DEPTH_TEST);
     super.render(18, gl.TRIANGLES, 3);
     gl.disable(gl.DEPTH_TEST);
+  }
+  renderRed() {
+    sendUniformMatToGLSL(this.modelMatrix.elements, u_ModelMatrix);  
+    var vertexBuffer = gl.createBuffer();
+    sendAttributeBufferToGLSL(this.vertices[0], 3, a_Position, vertexBuffer);
+    var normalBuffer = gl.createBuffer();
+    sendAttributeBufferToGLSL(this.normals[0], 3, a_Normal, normalBuffer);
+    var vertexColorBuffer = gl.createBuffer();
+    sendAttributeBufferToGLSL(this.clickedColor, 3, a_Color, vertexColorBuffer);
+    tellGLSLToDrawCurrentBuffer(gl.TRIANGLES, 18);
   }
 }

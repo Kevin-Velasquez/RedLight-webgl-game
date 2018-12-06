@@ -3,7 +3,7 @@
  * Variable definitions for all js files.
  */
 
-var gl, ev;
+var gl;
 var slider, nearslider, farslider, output, nearoutput, faroutput, interSlider;
 var a_Position, u_FragColor, a_PointSize, u_ModelMatrix, u_ViewMatrix, u_ProjMatrix, a_Normal;
 var mouseDown = 0, mouseUp = true, x, y, xy, size, rgb, rgba;
@@ -46,6 +46,8 @@ var img, scale, cubeNormals, gateNormals, pyramidNormals, diamondNormals, circle
 var u_Light, lightCounter = 0, lightStep = 1;
 var nPressed = false;
 var u_Clicked, objectClicked = false;
+var nthObjectColor = 2;
+var colorX, colorY;
 
 /**
  * Function called when the webpage loads.
@@ -82,8 +84,8 @@ function main() {
   u_FSwitch = gl.getUniformLocation(gl.program, 'u_FSwitch');
   u_Clicked = gl.getUniformLocation(gl.program, 'u_Clicked');
 
-  gl.uniform1f(u_FSwitch, 1.0);
-  gl.uniform1i(u_Clicked, 0); // Pass false to u_Clicked
+  gl.uniform1f(u_FSwitch, 1.0); //LIGHTING
+  gl.uniform1i(u_Clicked, 0); // RED
 
   /*vertexColorBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, vertexColorBuffer);

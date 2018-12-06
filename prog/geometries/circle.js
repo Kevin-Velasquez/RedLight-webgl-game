@@ -8,8 +8,9 @@ class Circle extends Geometry {
   /**
    * Constructor for Circle.
    */
-  constructor(radius, segments, centerX, centerY) {
+  constructor(radius, segments, centerX, centerY, index) {
     super();
+    this.objectIndex = index;
     this.generateCircleVertices(radius, segments, centerX, centerY);
     this.generateCircleNormals();
     this.vertices.push(circleVertices);
@@ -36,12 +37,15 @@ class Circle extends Geometry {
     var normalData = [];
     for(var i = 0; i < vertexData.length/2; i++) {
       normalData.push(0.0);
-      normalData.push(0.0);
       normalData.push(1.0);
+      normalData.push(0.0);
     }
     circleNormals = new Float32Array(normalData);
   }
   render() {
     super.render(vertexData.length/2, gl.TRIANGLE_FAN, 2);
+  }
+  renderRed() {
+    this.render();  
   }
 }

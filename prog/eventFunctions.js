@@ -51,8 +51,8 @@ function initEventHandelers() {
 
   if(once) {
     terrain = true
-    myRandomCircle = new RandomCircle(0.075, 40, g_EyeX, g_EyeY);
-    myTiltedCube = new TiltedCube(1.0, 0, 0);
+    myRandomCircle = new RandomCircle(0.075, 40, g_EyeX, g_EyeY, myScene.geometries.length);
+    myTiltedCube = new TiltedCube(1.0, 0, 0, myScene.geometries.length);
     rotateObject(myTiltedCube, 270, 1, 0, 0);
     translateObject(myTiltedCube, 0, 0, -1.1);
     scaleObject(myTiltedCube, 1, 2.25, 1);
@@ -71,24 +71,25 @@ function initEventHandelers() {
         if(worldMap[yRange][xRange] == 0) {
           continue;
         } else if(worldMap[yRange][xRange] == 2) {
-          myPyramid = new Pyramid(0.08, x+xOffset, y-yOffset);
+          myPyramid = new Pyramid(0.08, x+xOffset, y-yOffset, myScene.geometries.length);
           myScene.addGeometry(myPyramid);
         } else if(worldMap[yRange][xRange] == 3) {
-          myDiamond = new Diamond(0.08, x+xOffset, y-yOffset);
+          myDiamond = new Diamond(0.08, x+xOffset, y-yOffset, myScene.geometries.length);
           myScene.addGeometry(myDiamond);
         } else if(worldMap[yRange][xRange] == 4) {
-          myTiltedCube = new TiltedCube(0.1, x+xOffset, y-yOffset);
+          myTiltedCube = new TiltedCube(0.1, x+xOffset, y-yOffset, myScene.geometries.length);
           scaleObject(myTiltedCube, 1, 1, 2);
           translateObject(myTiltedCube, 0, 0, 0.1);
           myScene.addGeometry(myTiltedCube);
         } else {
-          myTiltedCube = new TiltedCube(0.1, x+xOffset, y-yOffset);
+          myTiltedCube = new TiltedCube(0.1, x+xOffset, y-yOffset, myScene.geometries.length);
           myScene.addGeometry(myTiltedCube);
         }
       }
     }
     once = false;
   }
+  console.log(myScene.geometries);
 }
 /**
  * Function called upon mouse click or mouse drag. Computes position of cursor,
@@ -100,7 +101,7 @@ function click(ev, gl, canvas, a_Position, u_FragColor, a_PointSize) {
    
   clickPostion(ev, gl, canvas);  //eventFunction.js
 
-  var picked = check();
+  check(ev);
 
   gl.clear(gl.COLOR_BUFFER_BIT);
 
@@ -113,9 +114,11 @@ function click(ev, gl, canvas, a_Position, u_FragColor, a_PointSize) {
  * pushes cursor position as GLSL coordinates, and draws.
  *
  */
-function clickPostion(ev, gl, canvas) {
+function clickPostion(ev) {
   x = ev.clientX;
   y = ev.clientY;
+  colorX = x;
+  colorY = y;
   var rect = ev.target.getBoundingClientRect();
   x = ((x - rect.left) - canvas.width/2)/(canvas.width/2);
   y = (canvas.height/2 - (y - rect.top))/(canvas.height/2);
@@ -152,9 +155,23 @@ function createGates() {
   myScene.addGeometry(myClosingGate);
 }
 
-function check() {
-  var picked = false;
-  //gl.uniform1i(u_Clicked, 1);  // Pass true to u_Clicked}
+function check(ev) {
+  var rect = ev.target.getBoundingClientRect();
+  var x_in_canvas = colorX - rect.left; 
+  var y_in_canvas = rect.bottom - colorY;
+  gl.uniform1f(u_FSwitch, 0.0);
+  myScene.renderGeometryRed();
+  
 
+  var pixels = new Uint8Array(4); // Array for storing the pixel value
+  gl.readPixels(x_in_canvas, y_in_canvas, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
 
+  var pos;
+  for(pos = 0; pos < myScene.geometries.length; pos++) {
+    if(pixels[0] == myScene.geometries[pos].rgb[0]) { 
+      myScene.geometries[pos].picked = (!myScene.geometries[pos].picked);
+      break;
+    }
+  }
+  gl.uniform1f(u_FSwitch, 1.0);
 }
