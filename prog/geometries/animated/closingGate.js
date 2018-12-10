@@ -8,8 +8,9 @@ class ClosingGate extends Geometry {
   /**
    * Constructor for ClosingGate.
    */
-  constructor(size, centerX, centerY, top, index) {
+  constructor(size, centerX, centerY, centerZ, top, index, pauseTime) {
     super();
+    this.animating.push(1);
     this.objectIndex = index;
     this.generateGateVertices(size, centerX, centerY);
     this.generateGateNormals();
@@ -17,9 +18,16 @@ class ClosingGate extends Geometry {
     this.normals.push(gateNormals);
     this.x.push(centerX);
     this.y.push(centerY);
+    this.z.push(centerZ);
     this.goingUpward = true;
     this.height = top;
     this.wait = 0;
+
+    this.pauseTime = pauseTime;
+    this.size = size;
+
+    this.bottomLeftXYPoint = [];
+    this.topRightXYPoint = [];
   }
 
   /**
@@ -72,32 +80,56 @@ class ClosingGate extends Geometry {
     ]);
   }
 
+  generateXYPoints() {
+    this.bottomLeftXYPoint.push(this.x[0]-(2*this.size));
+    this.bottomLeftXYPoint.push(this.y[0]-this.size);
+    this.topRightXYPoint.push(this.x[0]+(2*this.size));
+    this.topRightXYPoint.push(this.y[0]+this.size);
+  }
+
   /**
    * Updates the animation of the ClosingGate. Should make it rotate.
    */
   updateAnimation() {
     var translateUpward = new Matrix4();
     var translateDownward = new Matrix4(); 
-    if(this.wait == 0){
-      if(this.height < 0.8 && this.goingUpward) {
-        translateUpward.setTranslate(0, 0, 0.05);
-        this.modelMatrix = translateUpward.multiply(this.modelMatrix);
-        this.height = this.height+0.05;
-        return;
-      } else if(this.goingUpward){
-        this.goingUpward = false;
-        this.wait = 100;
-        return;
-      }
-      if(this.height > 0.4 && this.goingUpward == false && this.wait == 0) {
-        translateDownward.setTranslate(0, 0, -0.05);
-        this.modelMatrix = translateDownward.multiply(this.modelMatrix);
-        this.height = this.height-0.05;
-      } else if(this.goingUpward == false){
-        this.goingUpward = true;
+    //console.log(this.height);
+    if(!this.picked && this.pauseTime == 0) {
+      if(this.wait == 0){
+        if(this.height < 0.8 && this.goingUpward) {
+          this.z[0] += 0.05;
+          translateUpward.setTranslate(0, 0, 0.05);
+          this.modelMatrix = translateUpward.multiply(this.modelMatrix);
+          this.height = this.height+0.05;
+          return;
+        } else if(this.goingUpward){
+          this.goingUpward = false;
+          this.wait = 25;
+          return;
+        }
+        if(this.height > 0.4 && this.goingUpward == false && this.wait == 0) {
+          this.z[0] -= 0.05;
+          translateDownward.setTranslate(0, 0, -0.05);
+          this.modelMatrix = translateDownward.multiply(this.modelMatrix);
+          this.height = this.height-0.05;
+        } else if(this.goingUpward == false){
+          this.goingUpward = true;
+          if(  myPlayer.playerX > this.bottomLeftXYPoint[0] 
+            && myPlayer.playerX < this.topRightXYPoint[0]
+            && myPlayer.playerY > this.bottomLeftXYPoint[1]
+            && myPlayer.playerY < this.topRightXYPoint[1]) {
+            document.getElementById("deathReason").innerHTML = "CRUSHED BY GATE";
+            gameOver();
+          } 
+        }
+      } else {
+        this.wait -= 1;
       }
     } else {
-      this.wait -= 1;
+      this.pauseTime -= 1;
+      if(this.pauseTime == 0) {
+        this.picked = false;
+      }
     }
   }
   render() {

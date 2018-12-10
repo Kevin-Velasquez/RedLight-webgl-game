@@ -3,7 +3,9 @@
  */
 function tick() {
   for(var k = 0; k < myScene.geometries.length; k++) {
-    myScene.geometries[k].updateAnimation();
+    if(myScene.geometries[k].animating[0] > 0.0) {
+      myScene.geometries[k].updateAnimation();
+    }
   }
   if(currentX != g_EyeX || currentY != g_EyeY) {
     deltaPos(); 
@@ -31,14 +33,16 @@ function tick() {
     gl.uniform1f(u_Light, lightCounter/10);
   }
   if(persp) {
-    projMatrix.setPerspective(Number(slider.value), canvas.width/canvas.height, Number(nearslider.value/10), Number(farslider.value));
+    projMatrix.setPerspective(75, canvas.width/canvas.height, 0.03, 100);
   } else {
-    projMatrix.setOrtho(-1, 1, -1, 1, Number(nearslider.value/10), Number(farslider.value));
+    projMatrix.setOrtho(-1, 1, -1, 1, 0.03, 100);
   }
   gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
   gl.uniformMatrix4fv(u_ProjMatrix, false, projMatrix.elements);
   myScene.renderGeometry();
-  requestAnimationFrame(tick, canvas);
+  if(loop) {
+    requestAnimationFrame(tick, canvas);
+  }
 }
 
 function deltaPos() {

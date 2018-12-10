@@ -15,8 +15,8 @@ class RandomCircle extends Circle {
    * @param {Number} centerY The y-position of the circle being constructed
    * @returns {RandomCircle} RandomCircle object created
    */
-  constructor(radius, segments, centerX, centerY, index) {
-    super(radius, segments, centerX, centerY, index);
+  constructor(radius, segments, centerX, centerY, centerZ, index) {
+    super(radius, segments, centerX, centerY, centerZ, index);
   }
 
   /**

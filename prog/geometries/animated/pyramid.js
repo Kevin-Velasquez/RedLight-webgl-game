@@ -10,8 +10,9 @@ class Pyramid extends Geometry {
    * @constructor
    * @returns {pyramid}
    */
-  constructor(size, centerX, centerY, index) {
+  constructor(size, centerX, centerY, centerZ, index) {
     super();
+    this.animating.push(1);
     this.objectIndex = index;
     this.generatePyramidVertices(size, centerX, centerY);
     this.generatePyramidNormals();
@@ -19,6 +20,7 @@ class Pyramid extends Geometry {
     this.normals.push(pyramidNormals);
     this.x.push(centerX);
     this.y.push(centerY);
+    this.z.push(centerZ);
     this.goingLeft = true;
 
     // Recomendations: Might want to call generateUVCoordinates here.
@@ -56,22 +58,40 @@ class Pyramid extends Geometry {
   updateAnimation() {
     var translateRight = new Matrix4();
     var translateLeft = new Matrix4(); 
-    
-    if(this.x > -1 && this.goingLeft) {
-      translateLeft.setTranslate(-0.015, 0, 0);
-      this.modelMatrix = translateLeft.multiply(this.modelMatrix);
-      this.x = this.x-0.015;
-      return;
 
-    } else if(this.goingLeft){
-      this.goingLeft = false;
+    document.getElementById("bounces").innerHTML = "Bounces: " + bounces;
+    if(bounces == 10) { 
+      clearInterval(timer);
+      if(highSec < sec) {
+        document.getElementById("highseconds").innerHTML=pad(sec%60);
+        document.getElementById("highminutes").innerHTML=pad(parseInt(sec/60,10));
+        highSec = sec;
+      }
     }
-    if(this.x < 1 && this.goingLeft == false) {
-      translateRight.setTranslate(0.015, 0, 0);
-      this.modelMatrix = translateRight.multiply(this.modelMatrix);
-      this.x = this.x+0.015;
-    } else if(this.goingLeft == false){
-      this.goingLeft = true;
+    
+    if(!this.picked) {
+      if(this.x > -1 && this.goingLeft) {
+        translateLeft.setTranslate(-0.017, 0, 0);
+        this.modelMatrix = translateLeft.multiply(this.modelMatrix);
+        this.x = this.x-0.017;
+        return;
+      } else if(this.goingLeft){
+        this.goingLeft = false;
+        if(bounces < 10) bounces++;
+      }
+      if(this.x < 1 && this.goingLeft == false) {
+        translateRight.setTranslate(0.017, 0, 0);
+        this.modelMatrix = translateRight.multiply(this.modelMatrix);
+        this.x = this.x+0.017;
+      } else if(this.goingLeft == false){
+        this.goingLeft = true;
+        if(bounces < 10) bounces++;
+      }
+    } else {
+      this.pauseTime -= 1;
+      if(this.pauseTime == 0) {
+        this.picked = false;
+      }
     }
   }
   /**

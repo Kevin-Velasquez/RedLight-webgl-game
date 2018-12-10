@@ -4,29 +4,6 @@
  * within your HTML document.
  */
 function initEventHandelers() {
-  slider = document.getElementById("range");
-  output = document.getElementById("value");
-  sendTextToHTML(slider.value, output);
-  slider.oninput = function() {
-    sendTextToHTML(this.value, output);
-  }
-
-  nearslider = document.getElementById("nearrange");
-  nearoutput = document.getElementById("nearvalue");
-  sendTextToHTML(nearslider.value/10, nearoutput);
-  nearslider.oninput = function() {
-    sendTextToHTML(this.value/10, nearoutput);
-  }
-
-  farslider = document.getElementById("farrange");
-  faroutput = document.getElementById("farvalue");
-  sendTextToHTML(farslider.value, faroutput);
-  farslider.oninput = function() {
-    sendTextToHTML(this.value, faroutput);
-  }
-
-
-
   if (mouseDown != 1) { mouseDown = 0; }
 
   canvas.onmouseout = function(ev) { 
@@ -48,48 +25,7 @@ function initEventHandelers() {
     click(ev, gl, canvas, a_Position, u_FragColor, a_PointSize, u_ModelMatrix);
     xStart = x;
   };
-
-  if(once) {
-    terrain = true
-    myRandomCircle = new RandomCircle(0.075, 40, g_EyeX, g_EyeY, myScene.geometries.length);
-    myTiltedCube = new TiltedCube(1.0, 0, 0, myScene.geometries.length);
-    rotateObject(myTiltedCube, 270, 1, 0, 0);
-    translateObject(myTiltedCube, 0, 0, -1.1);
-    scaleObject(myTiltedCube, 1, 2.25, 1);
-    myScene.addGeometry(myTiltedCube);
-    myScene.addGeometry(myRandomCircle);
-    terrain = false;
-    createGates();
-  }
-  while(once) {
-    x=-0.9, y=0.9
-    var xOffset = 0,yOffset = 0; 
-    for(var yRange = 0; yRange < worldMap.length; yRange++) {
-      for(var xRange = 0; xRange < worldMap[0].length; xRange++) {
-        xOffset = xRange * (0.2);
-        yOffset = yRange * (0.2);
-        if(worldMap[yRange][xRange] == 0) {
-          continue;
-        } else if(worldMap[yRange][xRange] == 2) {
-          myPyramid = new Pyramid(0.08, x+xOffset, y-yOffset, myScene.geometries.length);
-          myScene.addGeometry(myPyramid);
-        } else if(worldMap[yRange][xRange] == 3) {
-          myDiamond = new Diamond(0.08, x+xOffset, y-yOffset, myScene.geometries.length);
-          myScene.addGeometry(myDiamond);
-        } else if(worldMap[yRange][xRange] == 4) {
-          myTiltedCube = new TiltedCube(0.1, x+xOffset, y-yOffset, myScene.geometries.length);
-          scaleObject(myTiltedCube, 1, 1, 2);
-          translateObject(myTiltedCube, 0, 0, 0.1);
-          myScene.addGeometry(myTiltedCube);
-        } else {
-          myTiltedCube = new TiltedCube(0.1, x+xOffset, y-yOffset, myScene.geometries.length);
-          myScene.addGeometry(myTiltedCube);
-        }
-      }
-    }
-    once = false;
-  }
-  console.log(myScene.geometries);
+  createWorld();  
 }
 /**
  * Function called upon mouse click or mouse drag. Computes position of cursor,
@@ -97,6 +33,7 @@ function initEventHandelers() {
  */
 
 function click(ev, gl, canvas, a_Position, u_FragColor, a_PointSize) {
+  if(!loop) return;
   initEventHandelers();
    
   clickPostion(ev, gl, canvas);  //eventFunction.js
@@ -104,9 +41,6 @@ function click(ev, gl, canvas, a_Position, u_FragColor, a_PointSize) {
   check(ev);
 
   gl.clear(gl.COLOR_BUFFER_BIT);
-
-  document.getElementById("xcoords").innerHTML = "X: " + x;
-  document.getElementById("ycoords").innerHTML = "Y: " + y;
 }
 
 /**
@@ -138,6 +72,11 @@ function scaleObject(object, xfactor, yfactor, zfactor) {
 function translateObject(object, xfactor, yfactor, zfactor) {
   var translate = new Matrix4 ();
   translate.setTranslate(xfactor, yfactor, zfactor);
+
+  object.x[0] += xfactor;
+  object.y[0] += yfactor;
+  object.z[0] += zfactor;
+
   object.modelMatrix = translate.multiply(object.modelMatrix);
 }
 
@@ -148,11 +87,18 @@ function rotateObject(object, rotation, xfactor, yfactor, zfactor) {
 }
 
 function createGates() {
-  myClosingGate = new ClosingGate(0.2, 0, 0, 0.4);
-  rotateObject(myClosingGate, 180, 0, 0, 1);
-  scaleObject(myClosingGate, 1, 0.5, 1);
-  translateObject(myClosingGate, 0, -0.7, 0.1);
-  myScene.addGeometry(myClosingGate);
+  for(var i = 0; i < gateCoords.length; i++) {
+    var myClosingGate = new ClosingGate(0.1, 0, 0, 0, 0.4, 
+                                        myScene.geometries.length, 
+                                        gateCoords[i][3]);
+    rotateObject(myClosingGate, 180, 0, 0, 1);
+    scaleObject(myClosingGate, 2.0, 1.0, 2.0);
+    translateObject(myClosingGate, gateCoords[i][0], gateCoords[i][1], gateCoords[i][2]);
+    myClosingGate.generateXYPoints();
+    //myClosingGate.picked = true;
+
+    myScene.addGeometry(myClosingGate);
+  }
 }
 
 function check(ev) {
@@ -166,12 +112,98 @@ function check(ev) {
   var pixels = new Uint8Array(4); // Array for storing the pixel value
   gl.readPixels(x_in_canvas, y_in_canvas, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
 
-  var pos;
-  for(pos = 0; pos < myScene.geometries.length; pos++) {
+  for(var pos = 0; pos < myScene.geometries.length; pos++) {
     if(pixels[0] == myScene.geometries[pos].rgb[0]) { 
-      myScene.geometries[pos].picked = (!myScene.geometries[pos].picked);
+      if(myScene.geometries[pos].animating[0] == 1) {
+        myScene.geometries[pos].picked = (!myScene.geometries[pos].picked);
+        myScene.geometries[pos].pauseTime = 40;
+      }
       break;
     }
   }
   gl.uniform1f(u_FSwitch, 1.0);
 }
+
+function createWorld() {
+  if(once) {
+    terrain = true
+    myFloor = new Floor(1.0, 0, 0, 0, myScene.geometries.length);
+    rotateObject(myFloor, 270, 1, 0, 0);
+    translateObject(myFloor, 0, 0, -1.1);
+    scaleObject(myFloor, 2.25, 2.25, 1);
+    myScene.addGeometry(myFloor);
+    terrain = false;
+    createGates();
+  }
+  while(once) {
+    x=-1.9, y=1.9;
+    var xOffset = 0,yOffset = 0; 
+    for(var yRange = 0; yRange < worldMap.length; yRange++) {
+      for(var xRange = 0; xRange < worldMap[0].length; xRange++) {
+        xOffset = xRange * (0.2);
+        yOffset = yRange * (0.2);
+        if(worldMap[yRange][xRange] == 0) {
+          continue;
+        } else if(worldMap[yRange][xRange] == 2) {
+          myPyramid = new Pyramid(0.08, x+xOffset, y-yOffset, 0, myScene.geometries.length);
+          myScene.addGeometry(myPyramid);
+        } else if(worldMap[yRange][xRange] == 3) {
+          myDiamond = new Diamond(0.08, x+xOffset, y-yOffset, 0, myScene.geometries.length);
+          myScene.addGeometry(myDiamond);
+        } else if(worldMap[yRange][xRange] == 4) {
+          myTiltedCube = new TiltedCube(0.1, x+xOffset, y-yOffset, 0, myScene.geometries.length);
+          scaleObject(myTiltedCube, 1, 1, 2);
+          translateObject(myTiltedCube, 0, 0, 0.1);
+          myScene.addGeometry(myTiltedCube);
+        } else {
+          myTiltedCube = new TiltedCube(0.1, x+xOffset, y-yOffset, 0, myScene.geometries.length);
+          myScene.addGeometry(myTiltedCube);
+        }
+      }
+    }
+    myRandomCircle = new RandomCircle(0.075, 40, g_EyeX, g_EyeY, 0, myScene.geometries.length);
+    myScene.addGeometry(myRandomCircle);
+    once = false;
+  }
+}
+
+function recreateWorld() {
+  clearInterval(timer);
+
+  movedX = 0, movedY = 0;
+  currentX = 0, currentY = -1.75;
+  g_EyeX = 0.0, g_EyeY = -1.75;
+  G_atX = 0; G_atY = 1;
+  angleRotation = 90;
+  myPlayer.playerX = 0.0, myPlayer.playerY = -1.75;
+
+  bounces = 0, sec = 0;
+  document.getElementById("seconds").innerHTML = " ";
+  document.getElementById("minutes").innerHTML = " ";
+
+  firstPersonView = true;
+
+  once =  true;
+  nthObject = 0;
+  document.getElementById("deathReason").innerHTML = "";
+
+  clearInterval(redNthObject);
+  myScene.clearGeometry();
+  createWorld();
+  loop = false;
+}
+
+gateCoords = [
+  [0.0, 0.1, 0.1, 0],
+  [0.0, 0.5, 0.1, 15],
+  [1.4, -1.7, 0.1, 8],
+  [1.4, -1.5, 0.1, 16], 
+  [1.4, -1.3, 0.1, 24], 
+  [1.4, -1.1, 0.1, 32],
+  [1.4, -0.9, 0.1, 40],
+  [-1.4, -1.7, 0.1, 8], 
+  [-1.4, -1.5, 0.1, 16],
+  [-1.4, -1.3, 0.1, 24],
+  [-1.4, -1.1, 0.1, 32],
+  [-1.4, -0.9, 0.1, 40]
+]

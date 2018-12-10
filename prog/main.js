@@ -1,65 +1,13 @@
 //Kevin Velasquez, ksvelasq@ucsc.edu
-/**
- * Variable definitions for all js files.
- */
-
-var gl;
-var slider, nearslider, farslider, output, nearoutput, faroutput, interSlider;
-var a_Position, u_FragColor, a_PointSize, u_ModelMatrix, u_ViewMatrix, u_ProjMatrix, a_Normal;
-var mouseDown = 0, mouseUp = true, x, y, xy, size, rgb, rgba;
-var triangleVertices, squareVertices, numberOfSegments, circleVertices;
-var squareButton = true, triangleButton = false, circleButton = false; 
-var tiltedCubeButton = false;
-var myScene, myGeometry, mySquare, myTriange, myCircle, myDiamond, myPyramid, myClosingGate;
-var mySpinningSquare, myRandomCircle, myFluctuatingTriangle, myTiltedCube;
-var ANGLE_STEP = 60.0, currentAngle = 0.0, currentSize = 1.0;
-var g_last = Date.now();
-var upward = true;
-var radian, cosB, sinB;
-var vertexData;
-var a_Color;
-var vertexTexCoordBuffer;
-var textureButton = true;
-var a_TexCoord;
-var verticesColors;
-var indices;
-var indice;
-var vertexColorBuffer;
-var reader;
-var image;
-var cubeVertices, diamondVertices, pyramidVertices, gateVertices;
-var worldMap, gameOverMap, color, start = false;
-var once = true;
-var goingLeft = true;
-var g_EyeX = 0.1, g_EyeY = -1, g_EyeZ = 0;
-var canvas, fileReader, fileOBJ, objString, loadedOBJ, terrain = true;
-var viewMatrix = new Matrix4(); 
-var projMatrix = new Matrix4();  
-var xStart, xDelta, angleRotation = 90;
-var G_atX = 0, G_atY = 100, tempG_atX, tempG_atY, angleRotationRads = 0;
-var leftRotation, persp = true, firstPersonView = true;
-var currentX = 0, currentY = -2.2;
-var g_EyeX = 0, g_EyeY = -2.2, g_EyeZ = 0;
-var u_EyeX, u_EyeY, u_EyeZ;
-var movedX = 0, movedY = 0;
-var img, scale, cubeNormals, gateNormals, pyramidNormals, diamondNormals, circleNormals;
-var u_Light, lightCounter = 0, lightStep = 1;
-var nPressed = false;
-var u_Clicked, objectClicked = false;
-var nthObjectColor = 2;
-var colorX, colorY;
-
-/**
- * Function called when the webpage loads.
- */ 
 
 function main() {
   myScene = new Scene();
   myGeometry = new Geometry();
+  myPlayer = new Player();
 
   canvas = document.getElementById('webgl');
   canvas.width = window.innerWidth - 15;
-  canvas.height = window.innerHeight - 300;
+  canvas.height = window.innerHeight - 325;
 
   gl = getWebGLContext(canvas);
 
@@ -87,17 +35,15 @@ function main() {
   gl.uniform1f(u_FSwitch, 1.0); //LIGHTING
   gl.uniform1i(u_Clicked, 0); // RED
 
-  /*vertexColorBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, vertexColorBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, verticesColors, gl.STATIC_DRAW);
-  gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, 0, 0);
-  gl.enableVertexAttribArray(a_Color);*/
-  //
+  vertexBuffer = gl.createBuffer();
+  normalBuffer = gl.createBuffer();
+  vertexColorBuffer = gl.createBuffer();
+
   initEventHandelers();
   document.onkeydown = function(ev) { keyPress(ev); };
+
   tick();
 }
-
 
 
 

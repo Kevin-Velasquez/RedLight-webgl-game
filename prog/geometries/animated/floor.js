@@ -4,7 +4,7 @@
  * @author "Your Name"
  * @this {TiltedCube}
  */
-class TiltedCube extends Geometry {
+class Floor extends Geometry {
   /**
    * Constructor for TiltedCube.
    */
@@ -12,14 +12,13 @@ class TiltedCube extends Geometry {
     super();
     this.animating.push(0);
     this.objectIndex = index;
-    this.generateCubeVertices(size, centerX, centerY);
-    this.generateCubeNormals();
-    this.vertices.push(cubeVertices);
-    this.normals.push(cubeNormals);
+    this.generateFloorVertices(size, centerX, centerY);
+    this.generateFloorNormals();
+    this.vertices.push(floorVertices);
+    this.normals.push(floorNormals);
     this.x.push(centerX);
     this.y.push(centerY);
     this.z.push(centerZ);
-    this.collisionRadius = 0.08;
   }
 
   /**
@@ -27,8 +26,8 @@ class TiltedCube extends Geometry {
    *
    * @private
    */
-  generateCubeVertices(size, centerX, centerY) {
-    cubeVertices = new Float32Array([
+  generateFloorVertices(size, centerX, centerY) {
+    floorVertices = new Float32Array([
       // Vertex coordinates and color
       centerX-size,  centerY+size,  size,      centerX-size, centerY-size,  size,       centerX+size, centerY-size,  size,    //t0 +Z facing
       centerX-size,  centerY+size,  size,      centerX+size,  centerY+size,  size,      centerX+size, centerY-size,  size,    //t1 +Z facing
@@ -49,8 +48,8 @@ class TiltedCube extends Geometry {
       centerX-size, centerY-size,  size,       centerX+size, centerY-size, -size,    centerX+size, centerY-size,  size        //t11 -Y facing
     ]);
   }
-  generateCubeNormals() {
-    cubeNormals = new Float32Array([
+  generateFloorNormals() {
+    floorNormals = new Float32Array([
       0.0, 0.0, 1.0,    0.0, 0.0, 1.0,     0.0, 0.0, 1.0,
       0.0, 0.0, 1.0,    0.0, 0.0, 1.0,     0.0, 0.0, 1.0,
 
@@ -97,11 +96,8 @@ class TiltedCube extends Geometry {
 
   renderRed() {
     sendUniformMatToGLSL(this.modelMatrix.elements, u_ModelMatrix);  
-    var vertexBuffer = gl.createBuffer();
     sendAttributeBufferToGLSL(this.vertices[0], 3, a_Position, vertexBuffer);
-    var normalBuffer = gl.createBuffer();
     sendAttributeBufferToGLSL(this.normals[0], 3, a_Normal, normalBuffer);
-    var vertexColorBuffer = gl.createBuffer();
     sendAttributeBufferToGLSL(this.clickedColor, 3, a_Color, vertexColorBuffer);
     tellGLSLToDrawCurrentBuffer(gl.TRIANGLES, 36);
   }

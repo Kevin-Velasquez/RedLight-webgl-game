@@ -8,19 +8,6 @@ function sendTextToHTML(text, htmlID) {
     htmlID.innerHTML = text;
 }
 
-/*function addFiles() {
-  var objectFile = document.getElementById("objInput");
-  var fileReader = new FileReader();
-  fileReader.readAsText(objectFile);
-  var objString = fileReader.result;
-  var loadedOBJ = new LoadedOBJ(objString);
-  console.log(loadedOBJ);
-  console.log(objString);
-  console.log(fileReader.result);
-  create2DTexture();
-  
-}*/
-
 function addFiles() {
   var objectFile = document.getElementById("objInput").files[0];
   var textureFile = document.getElementById("objInput").files[1];
@@ -59,12 +46,14 @@ function resize() {
   }
 }
 
-//allows strafing perpendicular to any look vector
 function keyPress(ev) {
+  //console.log(myPlayer.playerX + " " + myPlayer.playerY);
   var absX = Math.abs(G_atX);
   var absY = Math.abs(G_atY);
   var rightAngle = (angleRotation - 90);
   var leftAngle = (angleRotation + 90);
+  var tempX = g_EyeX;
+  var tempY = g_EyeY;
   if(Math.sign(rightAngle) == -1) { rightAngle += 360; }
   if(leftAngle >= 360) { leftAngle -= 360; }
   if(ev.keyCode == 68 || ev.keyCode == 39) { // The D(right) key was pressed
@@ -72,33 +61,49 @@ function keyPress(ev) {
       if(rightAngle < 90 && rightAngle >= 45) {
         g_EyeY += 0.03;
         g_EyeX += 0.03 * (absY/absX); 
+        myPlayer.playerY += 0.03;
+        myPlayer.playerX += 0.03 * (absY/absX); 
       } else {
         g_EyeY += 0.03 * (absX/absY);
         g_EyeX += 0.03;
+        myPlayer.playerY += 0.03 * (absX/absY);
+        myPlayer.playerX += 0.03;
       } 
     } else if(rightAngle < 180 && rightAngle >= 90) { 
       if(rightAngle < 135 && rightAngle >= 90) {
         g_EyeY += 0.03;
         g_EyeX -= 0.03 * (absY/absX);
+        myPlayer.playerY+= 0.03;
+        myPlayer.playerX -= 0.03 * (absY/absX);
       } else {
         g_EyeY += 0.03 * (absX/absY);
         g_EyeX -= 0.03;
+        myPlayer.playerY += 0.03 * (absX/absY);
+        myPlayer.playerX -= 0.03;
       } 
     } else if (rightAngle < 270 && rightAngle >= 180) {
       if(rightAngle < 270 && rightAngle >= 225) {
         g_EyeY -= 0.03;
         g_EyeX -= 0.03 * (absY/absX);
+        myPlayer.playerY -= 0.03;
+        myPlayer.playerX -= 0.03 * (absY/absX);
       } else {
         g_EyeY -= 0.03 * (absX/absY);
         g_EyeX -= 0.03;
+        myPlayer.playerY -= 0.03 * (absX/absY);
+        myPlayer.playerX -= 0.03;
       } 
     } else {
       if(rightAngle < 315 && rightAngle >= 270) {
         g_EyeY -= 0.03;
         g_EyeX += 0.03 * (absY/absX);
+        myPlayer.playerY -= 0.03;
+        myPlayer.playerX += 0.03 * (absY/absX);
       } else {
         g_EyeY -= 0.03 * (absX/absY);
         g_EyeX += 0.03;
+        myPlayer.playerY -= 0.03 * (absX/absY);
+        myPlayer.playerX += 0.03;
       } 
     }
   } else 
@@ -107,33 +112,49 @@ function keyPress(ev) {
       if(leftAngle < 90 && leftAngle >= 45) {
         g_EyeY += 0.03;
         g_EyeX += 0.03 * (absY/absX);
+        myPlayer.playerY += 0.03;
+        myPlayer.playerX += 0.03 * (absY/absX);
       } else {
         g_EyeY += 0.03 * (absX/absY);
         g_EyeX += 0.03;
+        myPlayer.playerY += 0.03 * (absX/absY);
+        myPlayer.playerX += 0.03;
       } 
     } else if(leftAngle < 180 && leftAngle >= 90){                 
       if(leftAngle < 135 && leftAngle >= 90) {
         g_EyeY += 0.03;
         g_EyeX -= 0.03 * (absY/absX);
+        myPlayer.playerY += 0.03;
+        myPlayer.playerX -= 0.03 * (absY/absX);
       } else {
         g_EyeY += 0.03 * (absX/absY);
         g_EyeX -= 0.03;
+        myPlayer.playerY += 0.03 * (absX/absY);
+        myPlayer.playerX -= 0.03;
       } 
     } else if (leftAngle < 270 && leftAngle >= 180) {
       if(leftAngle < 270 && leftAngle >= 225) {
         g_EyeY -= 0.03;
         g_EyeX -= 0.03 * (absY/absX);
+        myPlayer.playerY -= 0.03;
+        myPlayer.playerX -= 0.03 * (absY/absX);
       } else {
         g_EyeY -= 0.03 * (absX/absY);
         g_EyeX -= 0.03;
+        myPlayer.playerY -= 0.03 * (absX/absY);
+        myPlayer.playerX -= 0.03;
       } 
     } else {
       if(leftAngle < 315 && leftAngle >= 270) {
         g_EyeY -= 0.03;
         g_EyeX += 0.03 * (absY/absX);
+        myPlayer.playerY -= 0.03;
+        myPlayer.playerX += 0.03 * (absY/absX);
       } else {
         g_EyeY -= 0.03 * (absX/absY);
         g_EyeX += 0.03;
+        myPlayer.playerY -= 0.03 * (absX/absY);
+        myPlayer.playerX += 0.03;
       } 
     }
   } else 
@@ -142,33 +163,49 @@ function keyPress(ev) {
       if(absX > absY) {
         g_EyeY += 0.03 * (absY/absX);
         g_EyeX -= 0.03;
+        myPlayer.playerY += 0.03 * (absY/absX);
+        myPlayer.playerX -= 0.03;
       } else {
         g_EyeY += 0.03;
         g_EyeX -= 0.03 * (absX/absY);
+        myPlayer.playerY += 0.03;
+        myPlayer.playerX -= 0.03 * (absX/absY);
       } 
     } else if(Math.sign(G_atX) == -1 && Math.sign(G_atY) == -1){                     //if x is positive
       if(absX > absY) {
         g_EyeY -= 0.03 * (absY/absX);
         g_EyeX -= 0.03;
+        myPlayer.playerY -= 0.03 * (absY/absX);
+        myPlayer.playerX -= 0.03;
       } else {
         g_EyeY -= 0.03;
         g_EyeX -= 0.03 * (absX/absY);
+        myPlayer.playerY -= 0.03;
+        myPlayer.playerX -= 0.03 * (absX/absY);
       } 
     } else if (Math.sign(G_atX) == 1 && Math.sign(G_atY) == -1) {
       if(absX > absY) {
         g_EyeY -= 0.03 * (absY/absX);
         g_EyeX += 0.03;
+        myPlayer.playerY -= 0.03 * (absY/absX);
+        myPlayer.playerX += 0.03;
       } else {
         g_EyeY -= 0.03;
         g_EyeX += 0.03 * (absX/absY);
+        myPlayer.playerY -= 0.03;
+        myPlayer.playerX += 0.03 * (absX/absY);
       } 
     } else {
       if(absX > absY) {
         g_EyeY += 0.03 * (absY/absX);
         g_EyeX += 0.03;
+        myPlayer.playerY += 0.03 * (absY/absX);
+        myPlayer.playerX += 0.03;
       } else {
         g_EyeY += 0.03;
         g_EyeX += 0.03 * (absX/absY);
+        myPlayer.playerY += 0.03;
+        myPlayer.playerX += 0.03 * (absX/absY);
       } 
     } 
   } else
@@ -177,46 +214,62 @@ function keyPress(ev) {
       if(absX > absY) {
         g_EyeY -= 0.03 * (absY/absX);
         g_EyeX += 0.03;
+        myPlayer.playerY -= 0.03 * (absY/absX);
+        myPlayer.playerX += 0.03;
       } else {
         g_EyeY -= 0.03;
         g_EyeX += 0.03 * (absX/absY);
+        myPlayer.playerY -= 0.03;
+        myPlayer.playerX += 0.03 * (absX/absY);
       } 
     } else if(Math.sign(G_atX) == -1 && Math.sign(G_atY) == -1){                     //if x is positive
       if(absX > absY) {
         g_EyeY += 0.03 * (absY/absX);
         g_EyeX += 0.03;
+        myPlayer.playerY += 0.03 * (absY/absX);
+        myPlayer.playerX += 0.03;
       } else {
         g_EyeY += 0.03;
         g_EyeX += 0.03 * (absX/absY);
+        myPlayer.playerY += 0.03;
+        myPlayer.playerX += 0.03 * (absX/absY);
       } 
     } else if (Math.sign(G_atX) == 1 && Math.sign(G_atY) == -1) {
       if(absX > absY) {
         g_EyeY += 0.03 * (absY/absX);
         g_EyeX -= 0.03;
+        myPlayer.playerY += 0.03 * (absY/absX);
+        myPlayer.playerX -= 0.03;
       } else {
         g_EyeY += 0.03;
         g_EyeX -= 0.03 * (absX/absY);
+        myPlayer.playerY += 0.03;
+        myPlayer.playerX -= 0.03 * (absX/absY);
       } 
     } else {
       if(absX > absY) {
         g_EyeY -= 0.03 * (absY/absX);
         g_EyeX -= 0.03;
+        myPlayer.playerY -= 0.03 * (absY/absX);
+        myPlayer.playerX -= 0.03;
       } else {
         g_EyeY -= 0.03;
         g_EyeX -= 0.03 * (absX/absY);
+        myPlayer.playerY -= 0.03;
+        myPlayer.playerX -= 0.03 * (absX/absY);
       } 
     }
   } else 
 
   if(ev.keyCode == 74) {  //Turn left
-    angleRotation += 2;
+    angleRotation += 6;
     angleRotation = angleRotation % 360;
     angleRotationRads = toRadians(angleRotation);
     G_atX = 100 * Math.cos(angleRotationRads);
     G_atY = 100 * Math.sin(angleRotationRads);
   } else 
   if(ev.keyCode == 76) {  //Turn right
-    angleRotation -= 2;
+    angleRotation -= 6;
     angleRotation = angleRotation % 360;
     if(Math.sign(angleRotation) == -1) {
       angleRotation = 360 + angleRotation
@@ -224,43 +277,21 @@ function keyPress(ev) {
     angleRotationRads = toRadians(angleRotation);
     G_atX = 100 * Math.cos(angleRotationRads);
     G_atY = 100 * Math.sin(angleRotationRads);
-  } else 
-
-  if(ev.keyCode == 73) { //I : zoom in
-    if(slider.value > 30) {
-      slider.value -= 2;
-      slider = document.getElementById("range");
-      output = document.getElementById("value");
-      sendTextToHTML(slider.value, output);
-      slider.oninput = function() {
-        sendTextToHTML(this.value, output);
-      }
-    }
-  } else 
-  if(ev.keyCode == 75) { //K : zoom out
-    if(slider.value < 90) {
-      interSlider = Number(slider.value);
-      slider.value = interSlider + 2;
-      slider = document.getElementById("range");
-      output = document.getElementById("value");
-      sendTextToHTML(slider.value, output);
-      slider.oninput = function() {
-        sendTextToHTML(this.value, output);
-      }
-    }
   } else
   if(ev.keyCode == 78) {
     nPressed = (!nPressed);
   } 
   else { return; } // Prevent the unnecessary drawing  
-}
-
-function orthographic() {
-  persp = false;
-}
-
-function perspective() {
-  persp =true;
+  for(var k = 0; k < myScene.geometries.length; k++) {
+    if(myScene.geometries[k].collisionRadius > 0) {
+      if(myPlayer.detectCollision(k)) { 
+        g_EyeX = tempX;
+        g_EyeY = tempY;  
+        myPlayer.playerX = tempX;
+        myPlayer.playerY = tempY;
+      }
+    }
+  }
 }
 
 function firstPerson() {
@@ -280,43 +311,68 @@ function topDown() {
   G_atY = 100;
 }
 
-function worldStart() {
-  
+function gameOver() {
+  myScene.clearGeometry();
+  firstPersonView = false;
+
+  x=-1.90, y=1.90;
+  var xOffset = 0,yOffset = 0; 
+  for(var yRange = 0; yRange < gameOverMap.length; yRange++) {
+    for(var xRange = 0; xRange < gameOverMap[0].length; xRange++) {
+      xOffset = xRange * (0.2);
+      yOffset = yRange * (0.2);
+      if(gameOverMap[yRange][xRange] == 0) {
+        continue;
+      } else {
+        myTiltedCube = new TiltedCube(0.1, x+xOffset, y-yOffset, 0, myScene.geometries.length);
+        myScene.addGeometry(myTiltedCube);
+      }
+    }
+  }
+  redNthObject = setInterval(makeRed, 5);
 }
 
-worldMap = [
-  [1,1,4,0,4,1,1,1,1,1],
-  [0,2,0,0,0,0,0,0,0,0],
-  [1,1,1,4,0,4,1,1,1,1],
-  [0,0,0,0,0,0,2,0,0,0],
-  [1,0,1,1,1,4,0,4,1,1],
-  [0,0,0,2,0,0,0,0,0,0],
-  [1,1,1,1,4,0,4,0,1,1],
-  [0,0,0,0,0,0,0,2,0,0],
-  [1,1,1,4,0,0,4,1,1,1],
-  [0,3,0,0,0,0,0,0,3,0]
-]
+function gameWin() {
+  myScene.clearGeometry();
+  firstPersonView = false;
 
-/*worldMap = [
-  [1,1,1,1,1,1,1,1,1,1],
-  [1,0,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,0,1],
-  [1,1,4,0,4,1,1,1,1,1],
-  [0,2,0,0,0,0,0,0,0,0],
-  [1,1,1,4,0,4,1,1,1,1],
-  [0,0,0,0,0,0,2,0,0,0],
-  [1,0,1,1,1,4,0,4,1,1],
-  [0,0,0,2,0,0,0,0,0,0],
-  [1,1,1,1,4,0,4,0,1,1],
-  [0,0,0,0,0,0,0,2,0,0],
-  [1,1,1,4,0,0,4,1,1,1],
-  [0,3,0,0,0,0,0,0,3,0]
-]*/
+  x=-1.90, y=1.90;
+  var xOffset = 0,yOffset = 0; 
+  for(var yRange = 0; yRange < gameWinMap.length; yRange++) {
+    for(var xRange = 0; xRange < gameWinMap[0].length; xRange++) {
+      xOffset = xRange * (0.2);
+      yOffset = yRange * (0.2);
+      if(gameWinMap[yRange][xRange] == 0) {
+        continue;
+      } else {
+        myTiltedCube = new TiltedCube(0.1, x+xOffset, y-yOffset, 0, myScene.geometries.length);
+        myScene.addGeometry(myTiltedCube);
+      }
+    }
+  }
+}
 
+function makeRed() {
+  myScene.geometries[nthObject].picked = true;
+  myScene.geometries[nthObject+1].picked = true;
+  nthObject += 2;
+  if(nthObject == (myScene.geometries.length)) {
+    clearInterval(redNthObject);
+  }
+}
+
+function start() {
+  if(!loop) {
+    timer = setInterval( function(){
+      document.getElementById("seconds").innerHTML=pad(++sec%60);
+      document.getElementById("minutes").innerHTML=pad(parseInt(sec/60,10));
+    }, 1000);
+    loop = true;
+    tick();
+  }
+}
+
+function pad ( val ) { return val > 9 ? val : "0" + val; }
 
 gameOverMap = [
   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -339,6 +395,52 @@ gameOverMap = [
   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+]
+
+gameWinMap = [
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,1,0,1,0,0,1,1,0,0,1,0,0,1,0,0,0,0],
+  [0,0,0,1,0,1,0,1,0,0,1,0,1,0,0,1,0,0,0,0],
+  [0,0,0,0,1,0,0,1,0,0,1,0,1,0,0,1,0,0,0,0],
+  [0,0,0,0,1,0,0,1,0,0,1,0,1,0,0,1,0,0,0,0],
+  [0,0,0,0,1,0,0,0,1,1,0,0,0,1,1,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,1,0,0,0,1,0,1,1,1,1,1,0,1,0,0,0,1,0,1],
+  [0,1,0,0,0,1,0,0,0,1,0,0,0,1,1,0,0,1,0,1],
+  [0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,1],
+  [0,1,0,1,0,1,0,0,0,1,0,0,0,1,0,0,1,1,0,0],
+  [0,0,1,0,1,0,0,1,1,1,1,1,0,1,0,0,0,1,0,1],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+]
+
+worldMap = [
+  [4,4,0,0,0,0,0,4,4,4,4,4,4,0,0,0,0,0,4,4],
+  [4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,4,0,0,4,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,4,0,0,4,0,0,0,0,0,0,0,0],
+  [0,0,0,0,1,0,0,0,4,0,0,4,0,0,0,0,1,0,0,0],
+  [0,0,0,0,0,0,0,0,4,0,0,4,0,0,0,0,0,0,0,0],
+  [0,0,0,1,0,0,0,0,4,0,0,4,0,0,1,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,4,0,0,4,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,4,0,0,4,0,0,0,0,0,0,0,0],
+  [0,0,0,0,4,1,1,1,1,0,0,1,1,1,1,4,0,0,0,0],
+  [0,0,0,0,1,0,0,0,0,0,0,0,0,0,2,1,0,0,0,0],
+  [0,0,0,0,4,0,0,0,0,0,0,0,0,2,0,4,0,0,0,0],
+  [0,4,0,0,1,0,0,0,0,0,0,0,2,0,0,1,0,0,4,0],
+  [0,4,0,0,4,0,0,0,0,0,0,2,0,0,0,4,0,0,4,0],
+  [0,4,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,4,0],
+  [0,4,0,0,4,0,0,0,0,0,0,0,0,0,0,4,0,0,4,0],
+  [0,4,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,4,0],
+  [0,4,3,0,4,4,4,4,4,4,4,4,4,4,4,4,0,0,4,0]
 ]
 
 //Large in order to account for 100 sgements circles

@@ -12,8 +12,9 @@ class Diamond extends Geometry {
    * @constructor
    * @returns {diamond}
    */
-  constructor(size, centerX, centerY, index) {
+  constructor(size, centerX, centerY, centerZ, index) {
     super();
+    this.animating.push(1);
     this.objectIndex = index;
     this.generateDiamondVertices(size, centerX, centerY);
     this.generateDiamondNormals();
@@ -21,6 +22,7 @@ class Diamond extends Geometry {
     this.normals.push(diamondNormals);
     this.x.push(centerX);
     this.y.push(centerY);
+    this.z.push(centerZ);
 
     // Recomendations: Might want to call generateUVCoordinates here.
   }
@@ -60,17 +62,21 @@ class Diamond extends Geometry {
   }
 
   updateAnimation() {
-    var translateToOrigin = new Matrix4 ();
-    var rotateInPlace = new Matrix4 ();
-    var translateBack  = new Matrix4 ();
+    if(!this.picked) {
+      var translateToOrigin = new Matrix4 ();
+      var rotateInPlace = new Matrix4 ();
+      var translateBack  = new Matrix4 ();
 
-    translateToOrigin.setTranslate(-this.x[0], -this.y[0], 0);
-    rotateInPlace.setRotate(4, 0, 0, 1);
-    translateBack.setTranslate(this.x[0], this.y[0], 0);
+      translateToOrigin.setTranslate(-this.x[0], -this.y[0], 0);
+      rotateInPlace.setRotate(4, 0, 0, 1);
+      translateBack.setTranslate(this.x[0], this.y[0], 0);
 
-    this.modelMatrix = translateToOrigin.multiply(this.modelMatrix);
-    this.modelMatrix = rotateInPlace.multiply(this.modelMatrix);
-    this.modelMatrix = translateBack.multiply(this.modelMatrix);
+      this.modelMatrix = translateToOrigin.multiply(this.modelMatrix);
+      this.modelMatrix = rotateInPlace.multiply(this.modelMatrix);
+      this.modelMatrix = translateBack.multiply(this.modelMatrix);
+    } else {
+      gameWin();
+    }
   }
   /**
    * Renders diamond.

@@ -11,12 +11,15 @@ class Geometry {
    * @constructor
    */
   constructor() {
+    this.animating = [];
+    this.pauseTime = 0;
     this.objectIndex;
     this.vertices = []; // Vertex objects. Each vertex has x-y-z.
     this.normals = [];
     this.modelMatrix = new Matrix4(); // Model matrix applied to geometric object
     this.x = [];
     this.y = [];
+    this.z = [];
     this.shader = null; // shading program you will be using to shade this geometry
     this.textures = [];
     this.picked = false;
@@ -29,6 +32,8 @@ class Geometry {
     }
     this.clickedColor = new Float32Array(colorData);
     nthObjectColor += 1;
+
+    this.collisionRadius = 0.0;
   }
 
   /**
@@ -36,18 +41,13 @@ class Geometry {
    */
   render(numberOfVertices, renderMethod, space) {
     sendUniformMatToGLSL(this.modelMatrix.elements, u_ModelMatrix);  
-    var vertexBuffer = gl.createBuffer();
     sendAttributeBufferToGLSL(this.vertices[0], space, a_Position, vertexBuffer);
-    var normalBuffer = gl.createBuffer();
     sendAttributeBufferToGLSL(this.normals[0], space, a_Normal, normalBuffer);
     if(nPressed) {
-      var vertexColorBuffer = gl.createBuffer();
       sendAttributeBufferToGLSL(this.normals[0], space, a_Color, vertexColorBuffer);
     } else if(this.picked) {
-      var vertexColorBuffer = gl.createBuffer();
       sendAttributeBufferToGLSL(this.clickedColor, space, a_Color, vertexColorBuffer);
     } else {
-      var vertexColorBuffer = gl.createBuffer();
       sendAttributeBufferToGLSL(verticesColors, space, a_Color, vertexColorBuffer);
     }
     tellGLSLToDrawCurrentBuffer(renderMethod, numberOfVertices);

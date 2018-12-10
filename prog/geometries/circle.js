@@ -8,8 +8,9 @@ class Circle extends Geometry {
   /**
    * Constructor for Circle.
    */
-  constructor(radius, segments, centerX, centerY, index) {
+  constructor(radius, segments, centerX, centerY, centerZ, index) {
     super();
+    this.animating.push(1);
     this.objectIndex = index;
     this.generateCircleVertices(radius, segments, centerX, centerY);
     this.generateCircleNormals();
@@ -17,6 +18,7 @@ class Circle extends Geometry {
     this.normals.push(circleNormals);
     this.x.push(centerX);
     this.y.push(centerY);
+    this.z.push(centerZ);
   }
 
   /**

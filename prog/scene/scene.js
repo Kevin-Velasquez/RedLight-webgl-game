@@ -15,13 +15,6 @@ class Scene {
     this.worldObjects = [];
   }
 
-  /**
-   * Adds the given geometry to the the scene.
-   */
-  addWorldObject(worldObject) {
-    this.worldObjects.push(worldObject);
-  }
-
   addGeometry(geometry) {
     this.geometries.push(geometry);
   }
@@ -39,13 +32,6 @@ class Scene {
   //Updating is done individually through their own classes 
   updateAnimation() {
     myGeometry.updateAnimation();
-  }
-  
-  renderWorldObjects() {
-    //gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    for(var k = 0; k < this.worldObjects.length; k++) {
-      this.worldObjects[k].render();
-    }
   }
 
   renderGeometry() {
