@@ -28,8 +28,6 @@ class Scene {
     }
   }
 
-  //Rendering the objects will in turn also update the animations.
-  //Updating is done individually through their own classes 
   updateAnimation() {
     myGeometry.updateAnimation();
   }

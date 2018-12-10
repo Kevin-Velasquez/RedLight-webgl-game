@@ -26,6 +26,7 @@ function initEventHandelers() {
     xStart = x;
   };
   createWorld();  
+  console.log(myScene.geometries);
 }
 /**
  * Function called upon mouse click or mouse drag. Computes position of cursor,
@@ -111,12 +112,13 @@ function check(ev) {
 
   var pixels = new Uint8Array(4); // Array for storing the pixel value
   gl.readPixels(x_in_canvas, y_in_canvas, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-
-  for(var pos = 0; pos < myScene.geometries.length; pos++) {
+  var pos;
+  for(pos = 0; pos < myScene.geometries.length; pos++) {
     if(pixels[0] == myScene.geometries[pos].rgb[0]) { 
       if(myScene.geometries[pos].animating[0] == 1) {
         myScene.geometries[pos].picked = (!myScene.geometries[pos].picked);
         myScene.geometries[pos].pauseTime = 40;
+        console.log(pos);
       }
       break;
     }
@@ -170,6 +172,8 @@ function createWorld() {
 function recreateWorld() {
   clearInterval(timer);
 
+  nthObjectColor = 100;
+  colorX = 0, colorY = 0;
   movedX = 0, movedY = 0;
   currentX = 0, currentY = -1.75;
   g_EyeX = 0.0, g_EyeY = -1.75;
